@@ -1,7 +1,7 @@
 import axios from "axios";
 import { DataProvider } from "react-admin";
 
-const API_URL = "http://localhost:3000/api"; // Your Next.js API
+const API_URL = "https://misha-school.vercel.app/api"; // Your Next.js API
 
 const dataProvider: DataProvider = {
   getList: async (resource, params) => {

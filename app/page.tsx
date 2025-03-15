@@ -59,7 +59,7 @@ export default function Home() {
       <div className={styles.freeCourses}>
         <Typography
           gutterBottom
-          variant="h5"
+          variant="h6"
           component="div"
           sx={{
             display: "flex",
@@ -126,7 +126,7 @@ export default function Home() {
       </div>
       <div className={styles.studentFeedback}>
         <div className={styles.header}>
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography gutterBottom variant="h6" component="div">
             what students say about us ?
           </Typography>
         </div>

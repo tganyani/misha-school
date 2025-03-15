@@ -1,7 +1,7 @@
 import { NextRequest} from "next/server";
 import axios from "axios";
 
-import { getAccessToken } from "../create/route";
+import { getAccessToken } from "@/lib/helpers";
 
 
 export async function POST(request: NextRequest) {

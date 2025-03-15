@@ -37,7 +37,7 @@ const Footer = () => {
     <div className={styles.container}>
       <div className={styles.top}>
         <div className={styles.about}>
-          <Typography sx={{ color: "#2B1B17" }} variant="h6" component="div">
+          <Typography sx={{ color: "#eeeeee" }} variant="h6" component="div" >
             contact us
           </Typography>
           <List>
@@ -88,7 +88,7 @@ const Footer = () => {
           </List>
         </div>
         <div className={styles.statistics}>
-          <Typography gutterBottom variant="h6" component="div">
+          <Typography gutterBottom variant="h6" component="div" sx={{color:"#eeeeee"}}>
             statistics
           </Typography>
           <List>
@@ -98,7 +98,7 @@ const Footer = () => {
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <PeopleIcon />
+                  <PeopleIcon sx={{color:"#9e9e9e",fontSize:"18px"}}/>
                 </ListItemIcon>
                 <ListItemText
                   primary={
@@ -119,7 +119,7 @@ const Footer = () => {
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <MenuBookIcon />
+                  <MenuBookIcon sx={{color:"#9e9e9e",fontSize:"18px"}} />
                 </ListItemIcon>
                 <ListItemText
                   primary={
@@ -137,7 +137,7 @@ const Footer = () => {
           </List>
         </div>
         <div className={styles.more}>
-          <Typography gutterBottom variant="h6" component="div">
+          <Typography gutterBottom variant="h6" component="div"  sx={{color:"#eeeeee"}}>
             more
           </Typography>
           <List>
@@ -147,7 +147,7 @@ const Footer = () => {
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <GavelIcon />
+                  <GavelIcon sx={{color:"#9e9e9e",fontSize:"18px"}} />
                 </ListItemIcon>
                 <ListItemText
                   primary={
@@ -168,7 +168,7 @@ const Footer = () => {
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <PrivacyTipIcon />
+                  <PrivacyTipIcon  sx={{color:"#9e9e9e",fontSize:"18px"}}/>
                 </ListItemIcon>
                 <ListItemText
                   primary={
@@ -189,7 +189,7 @@ const Footer = () => {
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <AccessibilityIcon />
+                  <AccessibilityIcon sx={{color:"#9e9e9e",fontSize:"18px"}}/>
                 </ListItemIcon>
                 <ListItemText
                   primary={

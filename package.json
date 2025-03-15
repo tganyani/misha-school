@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -33,6 +33,7 @@
     "react-datepicker": "^7.5.0",
     "react-dom": "^18",
     "react-hook-form": "^7.54.2",
+    "react-material-ui-carousel": "^3.4.2",
     "react-redux": "^9.2.0",
     "redux-persist": "^6.0.0",
     "rollup-plugin-esbuild-minify": "^1.2.0",

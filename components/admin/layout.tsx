@@ -10,5 +10,5 @@ export const MyLayout = ({
     children,
   }: Readonly<{
     children: React.ReactNode;
-  }>) => <Layout menu={MyMenu} appBar={MyAppBar}>{children}</Layout>;
+  }>) => <Layout sx={{marginTop:"20px"}} menu={MyMenu} appBar={MyAppBar}>{children}</Layout>;
   

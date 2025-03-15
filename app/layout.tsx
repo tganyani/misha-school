@@ -8,10 +8,18 @@ import { Provider } from "react-redux";
 import { store } from "@/lib/store";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 
 let persistor = persistStore(store);
 
 const inter = Inter({ subsets: ["latin"] });
+const theme = createTheme({
+  typography: {
+    fontFamily: '"Proxima Nova", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+  },
+});
+
 
 export default function RootLayout({
   children,
@@ -21,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+      <ThemeProvider theme={theme}>
         <SessionProvider>
           <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
@@ -30,6 +39,7 @@ export default function RootLayout({
             </PersistGate>
           </Provider>
         </SessionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

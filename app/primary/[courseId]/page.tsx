@@ -9,6 +9,7 @@ import styles from "@/styles/course.module.scss";
 
 import Chip from "@mui/material/Chip";
 import Carousel from "react-material-ui-carousel";
+
 import Paper from "@mui/material/Paper";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";

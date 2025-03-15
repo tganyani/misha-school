@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
-import { getZoomAccessToken } from "../route";
 import axios from "axios";
+import { getZoomAccessToken } from "@/lib/helpers";
+
 
 export async function PATCH(
   req: Request,
@@ -50,6 +51,7 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const accessToken = await getZoomAccessToken();
+  console.log(accessToken)
   const { id } = params;
   try {
     const res = await axios.delete(
