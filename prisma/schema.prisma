@@ -14,19 +14,27 @@ datasource db {
 }
 
 model User {
-  id             Int      @id @default(autoincrement())
+  id             Int            @id @default(autoincrement())
   firstName      String
   lastName       String
+  email          String         @unique
+  about          String?
+  hLeducation    String?
+  country        String?
   image          String?
-  email          String   @unique
-  Role           Role     @default(student)
+  paymentPlan    PaymentPlan?
+  Role           Role           @default(student)
   password       String
-  lessonStudent  Lesson[] @relation("studentLessons")
-  lessonTutor    Lesson[] @relation("tutortLessons")
-  meetingStudent Zoom[]   @relation("studentMeetings")
-  meetingTutor   Zoom[]   @relation("tutorMeetings")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  lessonStudent  Lesson[]       @relation("studentLessons")
+  lessonTutor    Lesson[]       @relation("tutortLessons")
+  meetingStudent Zoom[]         @relation("studentMeetings")
+  meetingTutor   Zoom[]         @relation("tutorMeetings")
+  subjects       Course[]
+  availability   Avaliability[]
+  languages      Language[]
+  freeTrials     FreeTrial[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
 }
 
 enum Role {
@@ -43,6 +51,8 @@ model Course {
   rating      Int      @default(5)
   level       Level    @default(primary)
   lessons     Lesson[]
+  tutorId     Int
+  tutor       User     @relation(fields: [tutorId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -71,25 +81,66 @@ model Lesson {
   student   User     @relation("studentLessons", fields: [studentId], references: [id])
   tutor     User?    @relation("tutortLessons", fields: [tutorId], references: [id])
   course    Course   @relation(fields: [courseId], references: [id])
-  zoom  Zoom?
+  zoom      Zoom?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Zoom {
   id        Int      @id @default(autoincrement())
-  meetingId String @unique
+  meetingId String   @unique
   topic     String
   type      Int
   duration  Int
   url       String
-  lessonId  Int @unique
+  lessonId  Int      @unique
   studentId Int
   tutorId   Int?
   startTime DateTime
   student   User     @relation("studentMeetings", fields: [studentId], references: [id])
-  tutor   User?    @relation("tutorMeetings", fields: [tutorId], references: [id])
+  tutor     User?    @relation("tutorMeetings", fields: [tutorId], references: [id])
   lesson    Lesson   @relation(fields: [lessonId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Avaliability {
+  id     String   @id @default(uuid())
+  time   DateTime
+  booked Boolean  @default(false)
+  userId Int
+  user   User     @relation(fields: [userId], references: [id])
+}
+
+model Language {
+  id     String @id @default(uuid())
+  name   String
+  level  String
+  userId Int
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model PaymentPlan {
+  id           String          @id @default(uuid())
+  type         PaymentPlanType @default(Starter)
+  nLessonsLeft Int
+  userId       Int             @unique
+  user         User            @relation(fields: [userId], references: [id])
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+}
+
+enum PaymentPlanType {
+  Starter
+  Standard
+  Premium
+}
+
+model FreeTrial {
+  id        String   @id @default(uuid())
+  studEmail String
+  tutorId   Int
+  tutor     User     @relation(fields: [tutorId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

@@ -1,22 +1,36 @@
-import { List, Datagrid, TextField, DateField ,TextInput,SelectInput} from 'react-admin';
+import { List, Datagrid, TextField, DateField ,TextInput,SelectInput, SimpleList,} from 'react-admin';
+
+import { useMediaQuery } from "@mui/material";
+
 
 export const UserList = (props:any) => {
-//   const choices = [{id:1,name:"primary"},{id:2,name:"secondary"},{id:3,name:"university"}]
-//   const postFilters = [
-//     <TextInput label="search by title" source="title"  alwaysOn />,
-//     <TextInput label="search by description" source="description" defaultValue="course description" />,
-//     <SelectInput source="level" choices={choices} optionValue="name" />
-//   ];
+  const isSmall = useMediaQuery("(max-width:600px)");
+  const isbig = useMediaQuery("(max-width:1000px)");
+  const choices = [{id:1,name:"student"},{id:2,name:"tutor"},{id:3,name:"admin"}]
+  const postFilters = [
+    <TextInput label="search by first name" source="firstName"  alwaysOn />,
+    <TextInput label="search by email" source="email" />,
+    <SelectInput source="Role" choices={choices} optionValue="name" />
+  ];
   
   return (
-    <List {...props}>
-      <Datagrid>
-        <TextField source="firstName" />
-        <TextField source="lastName" />
-        <TextField source="email" />
-        <TextField source="Role" />
-        <DateField source="createdAt" />
-      </Datagrid>
+    <List {...props} filters={postFilters}>
+      {isSmall ? (
+              <SimpleList
+                primaryText={(record) => `${record.firstName}   ${record.lastName}`}
+                secondaryText={(record) => record.email}
+                tertiaryText={(record) => record.Role}
+              />
+            ) : (
+              <Datagrid>
+              <TextField source="firstName" />
+              <TextField source="lastName" />
+              <TextField source="email" />
+              <TextField source="Role" />
+              {!isbig&&<DateField source="createdAt" />}
+            </Datagrid>
+            )}
+     
     </List>
   )
 

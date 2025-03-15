@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -27,12 +27,14 @@
     "esbuild": "^0.14.0",
     "next": "^14.2.24",
     "next-auth": "^4.24.11",
+    "nodemailer": "^6.10.1",
     "qs": "^6.14.0",
     "react": "^18",
     "react-admin": "^5.6.1",
     "react-datepicker": "^7.5.0",
     "react-dom": "^18",
     "react-hook-form": "^7.54.2",
+    "react-material-ui-carousel": "^3.4.2",
     "react-redux": "^9.2.0",
     "redux-persist": "^6.0.0",
     "rollup-plugin-esbuild-minify": "^1.2.0",
@@ -42,6 +44,7 @@
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^20",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",

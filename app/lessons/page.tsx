@@ -12,6 +12,7 @@ import calendar from "dayjs/plugin/calendar";
 import Badge from "@mui/material/Badge";
 import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 dayjs.extend(calendar);
+import LoadingData from "@/components/loading-d";
 dayjs.extend(localizedFormat);
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -55,8 +56,13 @@ const Lessons = () => {
               <Divider />
               <Typography variant="body2" component="div" color="GrayText">
                 {
-                  //   dayjs(lesson?.startAt).format("LT")
-                  dayjs().calendar(dayjs(lesson?.startAt))
+                    dayjs(lesson?.startAt).format("ll")
+                  // dayjs(item.time).format("ll")
+                }
+              </Typography>
+              <Typography variant="body2" component="div" color="GrayText">
+                {
+                    dayjs(lesson?.startAt).format("LT")
                 }
               </Typography>
               <Typography variant="body2" component="div" color="GrayText">

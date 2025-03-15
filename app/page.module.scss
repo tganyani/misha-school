@@ -1,10 +1,11 @@
 .main {
   // padding: 6rem;
+  margin-top: 80px;
   min-height: 100vh;
   .intro {
-    margin-top: 30px;
+    // margin-top: 30px;
     height: 400px;
-    background-image: url("/home-background.jpg");
+    background-image: url("/bg-2.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -14,18 +15,11 @@
     align-items: center;
     .toptxt {
       font-size: 25px;
-      color: grey;
-      font-weight: 600;
+      color: #dd2c00;
+      font-weight: 400;
     }
     .bottomtxt {
-      color: gray;
-    }
-    .continue{
-      display: flex;
-      flex-flow: row wrap;
-      justify-content: space-around;
-      width: 100%;
-      margin-top: 200px;
+      color: #757575;
     }
   }
   .freeCourses {
@@ -43,6 +37,14 @@
       flex-flow: row wrap;
       gap: 20px;
       justify-content: space-around;
+      .description {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 5;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 16px;
+      }
     }
   }
   .studentFeedback {
@@ -61,6 +63,9 @@
       height: 250px;
       overflow-y: hidden;
       overflow-x: scroll;
+      scrollbar-color: #f5f5f5 white;
+      scrollbar-width: thin;
+      margin-bottom: 20px;
       .card {
         min-width: 350px;
         height: 220px;

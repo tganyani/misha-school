@@ -17,6 +17,8 @@ export function stringToColor(string: string) {
   
     return color;
   }
+
+  export  const fetcher = (url: string) => fetch(url).then((res) => res.json());
   
 
 

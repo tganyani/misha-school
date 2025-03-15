@@ -1,6 +1,8 @@
 "use client"
 
 import { Show, SimpleShowLayout, TextField, DateField, ReferenceField } from 'react-admin';
+import { ZoomUrl } from './lessonEdit';
+import { Typography } from '@mui/material';
 
 export const LessonShow = () => (
     <Show>
@@ -14,6 +16,8 @@ export const LessonShow = () => (
                     <ReferenceField source="courseId" reference="course">
                       <TextField source="title" />
                     </ReferenceField>
+                    <Typography component="div" color="GrayText" variant='body2'>Zoom link</Typography>
+                    <ZoomUrl/>
                     <DateField
                       source="startAt"
                       showTime

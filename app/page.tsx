@@ -13,6 +13,7 @@ import Paper from "@mui/material/Paper";
 import Chip from "@mui/material/Chip";
 import type { course,feedback } from "@/db";
 import { courses_,feedbacks } from "@/db";
+import ArrowRightAltIcon from "@mui/icons-material/ArrowRightAlt";
 
 
 export default function Home() {
@@ -32,47 +33,30 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <div className={styles.intro}>
-        <p className={styles.toptxt}>Welcome to Misha website</p>
+        <p className={styles.toptxt}>Welcome to Misha Online School</p>
         <p className={styles.bottomtxt}>
           we offer online classes to different age groups
         </p>
-        <div className={styles.continue}>
-          <Chip
-            label="Continue as a student >"
-            color="secondary"
-            component="a"
-            href="#basic-chip"
-            clickable
-            sx={{ backgroundColor: "yellow", color: "grey" }}
-          />
-          <Chip
-            label="Continue as a tutor >"
-            color="secondary"
-            component="a"
-            href="#basic-chip"
-            clickable
-            sx={{ backgroundColor: "yellow", color: "grey" }}
-          />
-        </div>
       </div>
 
       <div className={styles.freeCourses}>
         <Typography
           gutterBottom
-          variant="h5"
+          variant="h6"
           component="div"
           sx={{
             display: "flex",
             justifyContent: "center",
             marginTop: "10px",
             marginBottom: "10px",
+
           }}
         >
-          Have a look at some of our free courses
+          some of our free courses
         </Typography>
         <div className={styles.courses}>
           {courses.map((course: course) => (
-            <Card sx={{ maxWidth: 345 }} key={course.id}>
+            <Card sx={{ maxWidth: 345 }} key={course.id}  >
               <CardMedia
                 sx={{ height: 140 }}
                 image={course.image}
@@ -82,7 +66,7 @@ export default function Home() {
                 <Typography gutterBottom variant="body1" component="div">
                   {course.name}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography className={styles.description} variant="body2" color="text.secondary">
                   {course.description}
                 </Typography>
                 <div
@@ -113,12 +97,22 @@ export default function Home() {
                 </div>
               </CardContent>
               <CardActions>
-                <Button size="small" style={{ textTransform: "lowercase" }}>
-                  Share
-                </Button>
-                <Button size="small" style={{ textTransform: "lowercase" }}>
-                  Learn More
-                </Button>
+              <Chip
+                // onClick={() => router.push(`/primary/${course.id}`)}
+                sx={{
+                  backgroundColor: "limegreen",
+                  color: "white",
+                  flexDirection: "row-reverse",
+                  fontSize:"16px",
+                  paddingRight: "10px",
+                }}
+                label="continue to course"
+                icon={
+                  <ArrowRightAltIcon
+                    sx={{ color:"white","&&": { color: "white" } }}
+                  ></ArrowRightAltIcon>
+                }
+              />
               </CardActions>
             </Card>
           ))}
@@ -126,7 +120,7 @@ export default function Home() {
       </div>
       <div className={styles.studentFeedback}>
         <div className={styles.header}>
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography gutterBottom variant="h6" component="div">
             what students say about us ?
           </Typography>
         </div>
@@ -148,12 +142,13 @@ export default function Home() {
                   variant="body2"
                   component="div"
                   color="text.secondary"
+                  sx={{fontStyle:"italic",fontWeight:"bold"}}
                 >
                   {testimonial.message}
                 </Typography>
               </div>
               <div className={styles.cardFooter}>
-                <Typography variant="body1" component="div">
+                <Typography variant="body2" component="div">
                   {testimonial.name}
                 </Typography>
               </div>

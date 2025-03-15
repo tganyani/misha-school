@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
-import { getZoomAccessToken } from "../route";
 import axios from "axios";
+import { getZoomAccessToken } from "@/lib/helpers";
+
 
 export async function PATCH(
   req: Request,

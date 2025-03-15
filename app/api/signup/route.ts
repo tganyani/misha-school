@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
+
 export async function POST(request: Request) {
   const body = await request.json();
   const salt = await bcrypt.genSalt(10);

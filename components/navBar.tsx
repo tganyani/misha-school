@@ -46,37 +46,39 @@ const NavBar = () => {
             <MenuIcon />
           </div>
           <ul className={openLinks ? styles.openNavLinks : styles.navLinks}>
-          
             <li>
               <Link href="/">home</Link>
             </li>
 
-            {
-              (session?.user.Role ==="admin")&&<li>
-              <Link href="/admin">dashboard</Link>
-            </li>
-            }
-            {/* <li>
-              <Link href="/course" style={{ whiteSpace: "nowrap" }}>add course</Link>
-            </li> */}
+            {session?.user.Role === "admin" && (
+              <li>
+                <Link href="/admin">dashboard</Link>
+              </li>
+            )}
             <li>
-              <Link href="/primary" style={{ whiteSpace: "nowrap" }}>
-                courses
+              <Link href="/tutors" style={{ whiteSpace: "nowrap" }}>
+                tutors
               </Link>
             </li>
-           
+
             <li>
-                <Link href="/lessons" style={{ whiteSpace: "nowrap" }}>
-                  {" "}
-                  lessons
-                </Link>
-              </li>
+              <Link href="/lessons" style={{ whiteSpace: "nowrap" }}>
+                {" "}
+                lessons
+              </Link>
+            </li>
             <li>
-                <Link href="/schedule" style={{ whiteSpace: "nowrap" }}>
-                  {" "}
-                  schedule
-                </Link>
-              </li>
+              <Link href="/av" style={{ whiteSpace: "nowrap" }}>
+                {" "}
+                availability
+              </Link>
+            </li>
+            <li>
+              <Link href="/schedule" style={{ whiteSpace: "nowrap" }}>
+                {" "}
+                schedule
+              </Link>
+            </li>
             {!session && (
               <li>
                 <Link href="/signup" style={{ whiteSpace: "nowrap" }}>
@@ -146,7 +148,12 @@ const NavBar = () => {
                 </Typography>
               )}
             </MenuItem>
-            <MenuItem onClick={handleClose}>
+            <MenuItem
+              onClick={() => {
+                router.push("/pf");
+                handleClose();
+              }}
+            >
               <Typography variant="body2" component="div">
                 Profile
               </Typography>

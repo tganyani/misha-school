@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
+// export const dynamic = "force-dynamic";
+
 export async function GET(
   req: Request,
   { params }: { params: { id: string } }
@@ -12,6 +14,30 @@ export async function GET(
         where: {
           id: Number(id),
         },
+        include: {
+          subjects: {
+            select: {
+              title: true,
+              description: true,
+              level: true,
+              id: true,
+            },
+          },
+          languages: {
+            select: {
+              name: true,
+              id: true,
+              level: true,
+            },
+          },
+          availability: {
+            select: {
+              id: true,
+              booked: true,
+              time: true,
+            },
+          },
+        },
       })
     );
   } catch (err) {
@@ -22,20 +48,18 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const { id } = params;
-  const { data } = await req.json();
+  const { id } = await params;
+  const data = await req.json();
   try {
     const updatedUser = await prisma.user.update({
       where: {
         id: parseInt(id),
       },
-      data: {
-        Role: data?.Role,
-      },
+      data: data,
     });
-    return NextResponse.json(updatedUser, { status: 200 });
+    return NextResponse.json({ updated: true }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ msg: "error" }, { status: 500 });

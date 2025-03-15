@@ -1,10 +1,23 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
+
 export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const email = searchParams.get("email") as string
+  const firstName = searchParams.get("firstName") as string
+  const rol = searchParams.get("Role")
+  const role= (rol==="student")?"student":((rol==="tutor")?"tutor":"admin")
   try {
     return Response.json(
       await prisma.user.findMany({
+        where:{
+          AND: [
+            { firstName: { contains: firstName, mode: 'insensitive' } }, 
+            { email: { contains: email, mode: 'insensitive' } }, 
+            (rol!=="undefined")?{ Role: {equals:role}}:{}, 
+          ],
+        },
         select: {
           id: true,
           firstName: true,

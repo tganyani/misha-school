@@ -59,10 +59,11 @@ const Schedule = () => {
         start: dayjs(event.startAt).format("YYYY-MM-DD HH:mm"),
         end: dayjs(event.startAt).add(1, "h").format("YYYY-MM-DD HH:mm"),
       }));
-      console.log(ev)
-      return eventsService.set(ev);
+      // console.log(ev)
+      return calendar.events.set(ev);
+      //  eventsService.set(ev);
     }
-  }, [data]);
+  },[data]);
   
   useEffect(() => {
     // get all events

@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
+
+
 export async function GET(
   req: Request,
   { params }: { params: { id: string } }
@@ -25,7 +27,7 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   const { id } = params;
-  const { data } = await req.json();
+  const data  = await req.json();
   try {
     const updatedCourse = await prisma.course.update({
       where: {
@@ -37,7 +39,7 @@ export async function PATCH(
         level: data?.level,
       },
     });
-    return NextResponse.json(updatedCourse, { status: 200 });
+    return NextResponse.json({id:updatedCourse.id}, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ msg: "error" }, { status: 500 });
