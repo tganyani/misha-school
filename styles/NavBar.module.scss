@@ -1,0 +1,93 @@
+.container1 {
+  background-color: grey;
+    width: 100vw;
+    position: fixed;
+    top: 0px;
+    padding-bottom: 10px;
+    z-index: 20;
+    background-image: url("/home-background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-blend-mode:luminosity;
+    height: 50px;
+  .container {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    
+    .logo {
+      flex: 1;
+    }
+    .center {
+      flex: 1;
+      .menuIcon {
+        display: none;
+      }
+      .navLinks {
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        list-style: none;
+        align-items: center;
+        li {
+          font-size: 14px;
+          padding: {
+            left: 12px;
+            right: 12px;
+            top: 4px;
+            bottom: 4px;
+          }
+          border-radius: 12px;
+          &:hover {
+            background-color: limegreen;
+            color: white;
+          }
+        }
+      }
+      .openNavLinks {
+        display: flex;
+        flex-flow: column nowrap;
+        list-style: none;
+        row-gap: 10px;
+        li {
+          font-size: 14px;
+          padding: {
+            left: 12px;
+            right: 12px;
+            top: 4px;
+            bottom: 4px;
+          }
+          width: fit-content;
+          border-radius: 12px;
+          &:hover {
+            background-color: limegreen;
+            color: white;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .container1 {
+    .container {
+      .center {
+        flex-flow: column nowrap;
+        .menuIcon {
+          display: flex;
+          margin-left: 12px;
+          margin-bottom: 20px;
+          width: fit-content;
+          padding: 2px;
+          &:hover {
+            border: 2px solid limegreen;
+          }
+        }
+        .navLinks {
+          display: none;
+        }
+      }
+    }
+  }
+}

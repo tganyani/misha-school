@@ -1,0 +1,17 @@
+.container{
+    background-color: grey;
+    padding: 20px;
+    background-image: url("/home-background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-blend-mode:color;
+    .top{
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+        
+    }
+    .bottom{
+        margin-top: 20px;
+    }
+}

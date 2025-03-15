@@ -1,0 +1,18 @@
+.container {
+  margin-top: 50px;
+  min-height: calc(100vh - 50px);
+  .header{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    margin-top: 80px;
+    margin-bottom: 20px;
+  }
+  .inner{
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    // justify-content: center;
+    row-gap: 20px;
+  }
+}

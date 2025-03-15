@@ -1,0 +1,22 @@
+.container {
+    min-height: calc(100vh - 50px);
+    margin-top: 50px;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    width: 100%;
+    align-items: center;
+    row-gap: 10px;
+    .usercon{
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+    }
+    .form {
+        width: 220px;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        row-gap: 10px;
+    }
+}

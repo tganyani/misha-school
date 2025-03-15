@@ -1,0 +1,21 @@
+.container {
+  padding-top: 20px;
+  display: flex;
+  flex-flow: column nowrap;
+  row-gap: 30px;
+  .header {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    padding: 10px;
+  }
+  .tutor{
+    padding: 10px;
+  }
+  .zoom{
+    padding: 10px;
+  }
+  .contact{
+    padding: 10px;
+  }
+}

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Zoom" ALTER COLUMN "meetingId" SET DATA TYPE TEXT;

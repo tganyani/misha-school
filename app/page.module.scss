@@ -1,0 +1,84 @@
+.main {
+  // padding: 6rem;
+  min-height: 100vh;
+  .intro {
+    margin-top: 30px;
+    height: 400px;
+    background-image: url("/home-background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    .toptxt {
+      font-size: 25px;
+      color: grey;
+      font-weight: 600;
+    }
+    .bottomtxt {
+      color: gray;
+    }
+    .continue{
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: space-around;
+      width: 100%;
+      margin-top: 200px;
+    }
+  }
+  .freeCourses {
+    .firstP {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: 600;
+      color: grey;
+    }
+    .courses {
+      display: flex;
+      flex-flow: row wrap;
+      gap: 20px;
+      justify-content: space-around;
+    }
+  }
+  .studentFeedback {
+    .header {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .students {
+      display: flex;
+      flex-flow: row nowrap;
+      justify-content: space-between;
+      column-gap: 20px;
+      align-items: center;
+      height: 250px;
+      overflow-y: hidden;
+      overflow-x: scroll;
+      .card {
+        min-width: 350px;
+        height: 220px;
+        padding: 15px;
+        .cardImage {
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 7;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          margin-bottom: 20px;
+          img {
+            &:hover {
+              opacity: 0.6;
+            }
+          }
+        }
+      }
+    }
+  }
+}

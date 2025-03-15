@@ -1,0 +1,29 @@
+.container{
+    padding-top: 20px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    column-gap: 20px;
+    row-gap: 20px;
+    .lesson{
+        width: 200px;
+        display: flex;
+        justify-content: space-between;
+        :hover{
+            opacity: 0.6;
+        }
+        .styleDiv{
+            background-color: limegreen;
+            width: 8px;
+        }
+        .dataDiv{
+            display: flex;
+            flex-flow: column nowrap;
+            row-gap: 10px;
+        padding: 10px;
+
+        }
+    }
+}
+
+
