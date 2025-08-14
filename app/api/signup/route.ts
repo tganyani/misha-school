@@ -1,34 +1,71 @@
 import bcrypt from "bcryptjs";
-import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
+import { sendVerificationEmail } from "@/lib/email";
+import { generateVerificationCode } from "generate-verification-code";
 
-
-export async function POST(request: Request) {
-  const body = await request.json();
-  const salt = await bcrypt.genSalt(10);
-  const hash = await bcrypt.hash(body.password, salt);
-  const found = await prisma.user.findUnique({
-    where: {
-      email: body.email,
-    },
-    select: {
-      email: true,
-    },
-  });
-  if (found) {
-    return Response.json({ error: "user email already taken" }, { status: 403 });
-  }
-  
+export async function POST(req: Request) {
   try {
-    const user = await prisma.user.create({
-      data: {
-        firstName: body.firstName,
-        lastName: body.lastName,
-        email: body.email,
-        password: hash,
+    const { email, password, firstName, Role, lastName } = await req.json();
+    const existingUser = await prisma.user.findFirst({
+      where: {
+        email,
+        verified: true,
       },
     });
-    return Response.json({ message: "user created" }, { status: 201 });
+    if (existingUser) {
+      return Response.json({ err: "Email already in use", created: false });
+    }
+    const unverifiedUser = await prisma.user.findFirst({
+      where: {
+        email,
+        verified: false,
+      },
+    });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const verificationCode = generateVerificationCode({
+      length: 6,
+      type: "string",
+    });
+    const hashedVerificationCode = await bcrypt.hash(
+      verificationCode as string,
+      10
+    );
+    if (unverifiedUser) {
+      await sendVerificationEmail(email, verificationCode as string);
+      await prisma.user.update({
+        where: {
+          email,
+        },
+        data: {
+          verificationCode: hashedVerificationCode,
+          password: hashedPassword,
+        },
+      });
+      return Response.json({
+        msg: "Verification code sent to email",
+        created: true,
+        email,
+        err: "",
+      });
+    }
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        verificationCode: hashedVerificationCode,
+        firstName,
+        lastName,
+        Role,
+      },
+    });
+    await sendVerificationEmail(email, verificationCode as string);
+    return Response.json({
+      msg: "Verification code sent to email",
+      created: true,
+      email,
+      id: user.id,
+      err: "",
+    });
   } catch (error) {
     return Response.json({ error: "Internal Server Error" }, { status: 500 });
   }

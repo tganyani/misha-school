@@ -1,48 +1,60 @@
-import prisma from "@/lib/prisma"
-import bcrypt from "bcryptjs"
-import NextAuth from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
-
+import prisma from "@/lib/prisma";
+import bcrypt from "bcryptjs";
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. 'Sign in with...')
-      name: 'Credentials',
+      name: "Credentials",
 
       credentials: {
         email: { label: "email", type: "text", placeholder: "jsmith" },
-        password: { label: "password", type: "password" }
+        password: { label: "password", type: "password" },
       },
-      async authorize(credentials){
+      async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Missing email or password");
         }
         // console.log("credentials",credentials)
         const user = await prisma.user.findUnique({
           where: {
-            email: credentials?.email
-          }
-        })
+            email: credentials?.email,
+          },
+        });
         if (!user) {
           throw new Error("No user found");
         }
         // console.log(user)
-        const isValidPassword = await bcrypt.compare(credentials.password, user.password);
+        const isValidPassword = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
         if (!isValidPassword) {
           throw new Error("Invalid password");
         }
 
-        return { id: String(user.id ), name: user.firstName, email: user.email ,Role:user.Role,image:user.image};
-      }
-    })
+        return {
+          id: String(user.id),
+          name: user.firstName,
+          email: user.email,
+          Role: user.Role,
+          image: user.image,
+        };
+      },
+    }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
-        token.Role = user.Role
-        token.image = user.image
+        token.Role = user.Role;
+        token.image = user.image;
+      }
+      if (trigger === "update" && session?.user) {
+        token.Role = session.user.Role;
+        token.image = session.user.image;
       }
       return token;
     },
@@ -55,14 +67,13 @@ const handler = NextAuth({
       return session;
     },
   },
-  // pages: {
-  //   signIn: "/auth/signin",
-  // },
+  pages: {
+    signIn: "/signin",
+  },
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
   },
-  
-})
+});
 
-export { handler as GET, handler as POST } 
+export { handler as GET, handler as POST };

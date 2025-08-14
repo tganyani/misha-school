@@ -38,15 +38,18 @@ export default function Availability() {
       .catch((err) => console.error(err));
   };
   return (
-    <div>
+    <div style={{padding:"4px"}}>
       <div
         style={{
           display: "flex",
-          flexFlow: "row nowrap",
+          flexFlow: matches?"column nowrap":"row nowrap",
           justifyContent: "center",
           columnGap: "10px",
           marginBottom: "30px",
           marginTop: "20px",
+          maxWidth: "100vw",
+          overflowX: "auto",
+          rowGap:"8px"
         }}
       >
         <DatePicker
@@ -60,11 +63,10 @@ export default function Availability() {
           minDate={new Date()}
           minTime={dayjs().toDate()}
           maxTime={dayjs(new Date()).add(11, "hour").toDate()}
-          icon={<CalendarMonthIcon sx={{ color: "grey",fontSize:"16px" }} />}
+          icon={<CalendarMonthIcon sx={{ color: "grey", fontSize: "16px" }} />}
         />
         {date && (
           <Button
-            size="small"
             sx={{
               color: "white",
               backgroundColor: "limegreen",
@@ -74,14 +76,14 @@ export default function Availability() {
                 backgroundColor: "limegreen",
                 opacity: "0.8",
               },
-              py:0
+              py: matches?" ":0,
             }}
             onClick={handleAddTime}
           >
-            
-            {matches?"add":"add to calender"}
+            {matches ? "add" : "add to calender"}
           </Button>
         )}
+        
       </div>
       {error && (
         <Typography variant="body2" component="div">
@@ -120,13 +122,13 @@ export default function Availability() {
                     paddingX: "8px",
                     border: "2px solid #F3F4F6",
                     borderRadius: "12px",
-                    fontStyle:item.booked?"italic":"",
-                    color:item.booked?"gainsboro":"GrayText"
+                    fontStyle: item.booked ? "italic" : "",
+                    color: item.booked ? "gainsboro" : "GrayText",
                   }}
                 >
-                 {item.booked?" booked":"not yet booked"}
+                  {item.booked ? " booked" : "not yet booked"}
                 </Typography>
-                <EditAvailabilityModal  currentTime={item.time} id={item.id} />
+                <EditAvailabilityModal currentTime={item.time} id={item.id} />
               </Stack>
             </Stack>
           ))

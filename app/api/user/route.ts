@@ -37,6 +37,7 @@ export async function GET(request: Request) {
 
 export async function DELETE(req: Request) {
     const { ids } = await req.json();
+    console.log(ids)
     try {
       const deletedUsers = await prisma.user.deleteMany({
         where: {

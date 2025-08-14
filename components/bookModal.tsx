@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useSession } from "next-auth/react";
 import useMediaQuery from "@mui/material/useMediaQuery";
@@ -33,6 +34,7 @@ export default function BookModal({
   startAt,
   id,
   booked,
+  nlessons
 }: {
   courses: CourseType[];
   tutorEmail: string;
@@ -41,7 +43,9 @@ export default function BookModal({
   startAt: string;
   id: string;
   booked: boolean;
+  nlessons: number
 }) {
+  const router = useRouter()
   const { data: session } = useSession();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -73,6 +77,7 @@ export default function BookModal({
       })
       .then(({ data }) => {
         mutate(`/api/user/${tutorId}`);
+        setOpen(false)
       })
       .catch((err) => console.log(err));
     setLoading(false);
@@ -86,73 +91,101 @@ export default function BookModal({
         variant="contained"
         size="small"
       >
-        {booked ? "booked" : "book now"}
+        {booked ? "booked" : "book now"} 
       </Button>
-      <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm"   sx={{}}>
-        <DialogTitle variant="body1">
-          You are booking a lesson from{" "}
-          <span style={{ fontWeight: "bold" }}>{tutorName}</span>
-        </DialogTitle>
-        <DialogContent sx={{padding:1}}>
-          <Stack spacing={2} py={1}>
-            <TextField
-              {...register("phone", { required: true })}
-              label="whatsapp number"
-              id="outlined-size-small"
-              defaultValue=""
-              size="small"
-              sx={{
-                width: "100%",
-              }}
-            />
-            {errors.phone && (
-              <Typography
-                component="div"
-                variant="body2"
-                sx={{ color: "tomato" }}
-              >
-                this field is required
-              </Typography>
-            )}
-            <TextField
-              {...register("description", { required: true })}
-              label="write something"
-              defaultValue=""
-              size="small"
-              multiline
-              minRows={4}
-              sx={{
-                width: "100%",
-              }}
-            />
-            <FormControl fullWidth size="small">
-              <InputLabel>choose course</InputLabel>
-              <Controller
-                name="courseId"
-                control={control}
-                render={({ field }) => (
-                  <Select {...field}>
-                    {courses.map((item) => (
-                      <MenuItem key={item.id} value={String(item.id)}>
-                        {item.title}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                )}
-              />
-            </FormControl>
-            <DialogActions>
-              <Button
-                disabled={loading}
-                onClick={() => setOpen(false)}
+      {
+        nlessons > 0 ? <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm" sx={{}}>
+          <DialogTitle variant="body1">
+            You are booking a lesson from{" "}
+            <span style={{ fontWeight: "bold" }}>{tutorName}</span>
+          </DialogTitle>
+          <DialogContent sx={{ padding: 1 }}>
+            <Stack spacing={2} py={1}>
+              <TextField
+                {...register("phone", { required: true })}
+                label="whatsapp number"
+                id="outlined-size-small"
+                defaultValue=""
+                size="small"
                 sx={{
-                  textTransform: "lowercase",
+                  width: "100%",
                 }}
-              >
-                cancel
-              </Button>
+              />
+              {errors.phone && (
+                <Typography
+                  component="div"
+                  variant="body2"
+                  sx={{ color: "tomato" }}
+                >
+                  this field is required
+                </Typography>
+              )}
+              <TextField
+                {...register("description", { required: true })}
+                label="write something"
+                defaultValue=""
+                size="small"
+                multiline
+                minRows={4}
+                sx={{
+                  width: "100%",
+                }}
+              />
+              <FormControl fullWidth size="small">
+                <InputLabel>choose course</InputLabel>
+                <Controller
+                  name="courseId"
+                  control={control}
+                  render={({ field }) => (
+                    <Select {...field}>
+                      {courses.map((item) => (
+                        <MenuItem key={item.id} value={String(item.id)}>
+                          {item.title}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  )}
+                />
+              </FormControl>
+              <DialogActions>
+                <Button
+                  disabled={loading}
+                  onClick={() => setOpen(false)}
+                  sx={{
+                    textTransform: "lowercase",
+                  }}
+                >
+                  cancel
+                </Button>
+                <Button
+                  type="submit"
+                  size="small"
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "limegreen",
+                    textTransform: "lowercase",
+                    color: "white",
+                    minWidth: 120,
+                  }}
+                  disabled={!allFilled || loading}
+                  onClick={handleSubmit(onSubmit)}
+                >
+                  {loading ? (
+                    <CircularProgress size={16} sx={{ color: "white" }} />
+                  ) : (
+                    "Book now"
+                  )}
+                </Button>
+              </DialogActions>
+            </Stack>
+          </DialogContent>
+        </Dialog> : <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm" sx={{}}>
+          <DialogTitle variant="body1">
+            There is no active study plan!
+          </DialogTitle>
+          <DialogContent sx={{ padding: 1 }}>
+            <Stack spacing={2} py={1}>
               <Button
-                type="submit"
                 size="small"
                 variant="contained"
                 sx={{
@@ -161,19 +194,25 @@ export default function BookModal({
                   color: "white",
                   minWidth: 120,
                 }}
-                disabled={!allFilled || loading}
-                onClick={handleSubmit(onSubmit)}
+                onClick={() => router.push("/plan")}
               >
-                {loading ? (
-                  <CircularProgress size={16} sx={{ color: "white" }} />
-                ) : (
-                  "Book now"
-                )}
+                choose plan
               </Button>
-            </DialogActions>
-          </Stack>
-        </DialogContent>
-      </Dialog>
+              <DialogActions>
+                <Button
+                  disabled={loading}
+                  onClick={() => setOpen(false)}
+                  sx={{
+                    textTransform: "lowercase",
+                  }}
+                >
+                  cancel
+                </Button>
+              </DialogActions>
+            </Stack>
+          </DialogContent>
+        </Dialog>
+      }
     </>
   );
 }

@@ -11,9 +11,13 @@
   }
   .tutor{
     padding: 10px;
+
   }
   .zoom{
     padding: 10px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 8px;
   }
   .contact{
     padding: 10px;

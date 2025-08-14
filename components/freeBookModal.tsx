@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -15,6 +17,7 @@ import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import axios from "axios";
 import { CourseType } from "@/lib/user-types";
+import { mutate } from "swr";
 
 type Inputs = {
   email: string;
@@ -34,6 +37,8 @@ export default function FreeBookModal({
   tutorName: string;
   tutorId: number;
 }) {
+  const router = useRouter();
+  const { data: session } = useSession();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   const {
@@ -62,6 +67,7 @@ export default function FreeBookModal({
       })
       .catch((err) => console.log(err));
     setLoading(false);
+    mutate("/api/tutor")
   };
   return (
     <>
@@ -75,100 +81,125 @@ export default function FreeBookModal({
       >
         Book free trial
       </Button>
-      <Dialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
-        <DialogTitle variant="body1">
-          You are booking a free lesson from{" "}
-          <span style={{ fontWeight: "bold" }}>{tutorName}</span>
-        </DialogTitle>
-        <DialogContent sx={{ paddingBottom: 0,px:2 }}>
-          <Stack spacing={2} py={1}>
-            <TextField
-              {...register("email", { required: true })}
-              label="Enter your email"
-              id="outlined-size-small"
-              defaultValue=""
-              size="small"
-              sx={{
-                width: "100%",
-              }}
-            />
-            <TextField
-              {...register("phone", { required: true })}
-              label="whatsapp number"
-              id="outlined-size-small"
-              defaultValue=""
-              size="small"
-              sx={{
-                width: "100%",
-              }}
-            />
-            {errors.phone && (
-              <Typography
-                component="div"
-                variant="body2"
-                sx={{ color: "tomato" }}
-              >
-                this field is required
-              </Typography>
-            )}
-            <TextField
-              {...register("description", { required: true })}
-              label="write something"
-              defaultValue=""
-              size="small"
-              multiline
-              minRows={4}
-              sx={{
-                width: "100%",
-              }}
-            />
-            <FormControl fullWidth size="small">
-              <InputLabel >choose course</InputLabel>
-              <Controller
-                name="courseId"
-                control={control}
-                render={({ field }) => (
-                  <Select {...field} label="choose course" >
-                    {courses.map((item) => (
-                      <MenuItem key={item.id} value={String(item.id)}>
-                        {item.title}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                )}
-              />
-            </FormControl>
-            <DialogActions>
-              <Button
-                disabled={loading}
-                onClick={() => setOpen(false)}
-                sx={{
-                  textTransform: "lowercase",
-                }}
-              >
-                cancel
-              </Button>
-              <Button
-                type="submit"
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        fullWidth ={session?true:false}
+        maxWidth="sm"
+      >
+        {session ? (
+          <DialogTitle variant="body1">
+            You are booking a free lesson from{" "}
+            <span style={{ fontWeight: "bold" }}>{tutorName}</span>
+          </DialogTitle>
+        ) : (
+          <DialogTitle variant="body1">You are not logged in !</DialogTitle>
+        )}
+        <DialogContent sx={{ paddingBottom: 0, px: 2 }}>
+          {session ? (
+            <Stack spacing={2} py={1}>
+              <TextField
+                {...register("email", { required: true })}
+                label="Enter your email"
+                id="outlined-size-small"
+                defaultValue=""
                 size="small"
-                variant="contained"
                 sx={{
-                  backgroundColor: "limegreen",
-                  textTransform: "lowercase",
-                  color: "white",
-                  minWidth: 120,
+                  width: "100%",
                 }}
-                disabled={!allFilled || loading}
-                onClick={handleSubmit(onSubmit)}
-              >
-                {loading ? (
-                  <CircularProgress size={16} sx={{ color: "white" }} />
-                ) : (
-                  "Book for free"
-                )}
-              </Button>
-            </DialogActions>
-          </Stack>
+              />
+              <TextField
+                {...register("phone", { required: true })}
+                label="whatsapp number"
+                id="outlined-size-small"
+                defaultValue=""
+                size="small"
+                sx={{
+                  width: "100%",
+                }}
+              />
+              {errors.phone && (
+                <Typography
+                  component="div"
+                  variant="body2"
+                  sx={{ color: "tomato" }}
+                >
+                  this field is required
+                </Typography>
+              )}
+              <TextField
+                {...register("description", { required: true })}
+                label="write something"
+                defaultValue=""
+                size="small"
+                multiline
+                minRows={4}
+                sx={{
+                  width: "100%",
+                }}
+              />
+              <FormControl fullWidth size="small">
+                <InputLabel>choose course</InputLabel>
+                <Controller
+                  name="courseId"
+                  control={control}
+                  render={({ field }) => (
+                    <Select {...field} label="choose course">
+                      {courses.map((item) => (
+                        <MenuItem key={item.id} value={String(item.id)}>
+                          {item.title}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  )}
+                />
+              </FormControl>
+              <DialogActions>
+                <Button
+                  disabled={loading}
+                  onClick={() => setOpen(false)}
+                  sx={{
+                    textTransform: "lowercase",
+                  }}
+                >
+                  cancel
+                </Button>
+                <Button
+                  type="submit"
+                  size="small"
+                  variant="contained"
+                  sx={{
+                    backgroundColor: "limegreen",
+                    textTransform: "lowercase",
+                    color: "white",
+                    minWidth: 120,
+                  }}
+                  disabled={!allFilled || loading}
+                  onClick={handleSubmit(onSubmit)}
+                >
+                  {loading ? (
+                    <CircularProgress size={16} sx={{ color: "white" }} />
+                  ) : (
+                    "Book for free"
+                  )}
+                </Button>
+              </DialogActions>
+            </Stack>
+          ) : (
+            <Button
+              onClick={() => router.push("/signin")}
+              variant="contained"
+              size="small"
+              sx={{
+                textTransform: "lowercase",
+                backgroundColor: "limegreen",
+                marginBottom:"20px",
+                width:"100%"
+              }}
+            >
+              login
+            </Button>
+          )}
         </DialogContent>
       </Dialog>
     </>

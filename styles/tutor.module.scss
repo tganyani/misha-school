@@ -1,0 +1,16 @@
+.carouseItem {
+    margin-right: 8px;
+    width: 500px !important;
+
+}
+
+.carouseContainer {
+    // background-color: green;
+}
+
+@media only screen and (max-width: 520px) {
+    .carouseItem {
+        width: calc(100vw - 16px) !important;
+
+    }
+}

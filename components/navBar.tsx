@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { usePathname } from "next/navigation";
 
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
@@ -15,22 +17,40 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Paper from "@mui/material/Paper";
 import { Divider, Typography } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
+import LogoutIcon from "@mui/icons-material/Logout";
+import LoginIcon from "@mui/icons-material/Login";
 
 import { stringToColor } from "@/helper";
+import axios from "axios";
 
 const NavBar = () => {
+  const matches = useMediaQuery("(max-width:600px)");
   const router = useRouter();
+  const pathname = usePathname();
   const [openLinks, setOpenLinks] = useState<boolean>(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   // session data
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const handleChaangeRole = async (role: string) => {
+    await axios
+      .post("/api/auth/role", { role, id: session?.user.id })
+      .then(async ({ data }) => {
+        await update({
+          user: {
+            ...session?.user,
+            Role: data?.Role,
+          },
+        });
+      })
+      .catch((err) => console.error(err));
   };
   return (
     <Paper className={styles.container1} elevation={0}>
@@ -45,42 +65,99 @@ const NavBar = () => {
           >
             <MenuIcon />
           </div>
-          <ul className={openLinks ? styles.openNavLinks : styles.navLinks}>
-            <li>
+          <ul
+            className={
+              openLinks && matches ? styles.openNavLinks : styles.navLinks
+            }
+          >
+            <li
+              onClick={() => setOpenLinks(false)}
+              style={
+                pathname === "/"
+                  ? { backgroundColor: "limegreen", color: "white" }
+                  : {}
+              }
+            >
               <Link href="/">home</Link>
             </li>
 
             {session?.user.Role === "admin" && (
-              <li>
+              <li
+                onClick={() => setOpenLinks(false)}
+                style={
+                  pathname === "/admin"
+                    ? { backgroundColor: "limegreen", color: "white" }
+                    : {}
+                }
+              >
                 <Link href="/admin">dashboard</Link>
               </li>
             )}
-            <li>
+            <li
+              onClick={() => setOpenLinks(false)}
+              style={
+                pathname === "/tutors"
+                  ? { backgroundColor: "limegreen", color: "white" }
+                  : {}
+              }
+            >
               <Link href="/tutors" style={{ whiteSpace: "nowrap" }}>
                 tutors
               </Link>
             </li>
+            {session && (
+              <li
+                onClick={() => setOpenLinks(false)}
+                style={
+                  pathname === "/lessons"
+                    ? { backgroundColor: "limegreen", color: "white" }
+                    : {}
+                }
+              >
+                <Link href="/lessons" style={{ whiteSpace: "nowrap" }}>
+                  lessons
+                </Link>
+              </li>
+            )}
 
-            <li>
-              <Link href="/lessons" style={{ whiteSpace: "nowrap" }}>
-                {" "}
-                lessons
-              </Link>
-            </li>
-            <li>
-              <Link href="/av" style={{ whiteSpace: "nowrap" }}>
-                {" "}
-                availability
-              </Link>
-            </li>
-            <li>
-              <Link href="/schedule" style={{ whiteSpace: "nowrap" }}>
-                {" "}
-                schedule
-              </Link>
-            </li>
+            {(session?.user.Role === "tutor" ||
+              session?.user.Role === "admin") && (
+              <li
+                onClick={() => setOpenLinks(false)}
+                style={
+                  pathname === "/av"
+                    ? { backgroundColor: "limegreen", color: "white" }
+                    : {}
+                }
+              >
+                <Link href="/av" style={{ whiteSpace: "nowrap" }}>
+                  availability
+                </Link>
+              </li>
+            )}
+            {session && (
+              <li
+                onClick={() => setOpenLinks(false)}
+                style={
+                  pathname === "/schedule"
+                    ? { backgroundColor: "limegreen", color: "white" }
+                    : {}
+                }
+              >
+                <Link href="/schedule" style={{ whiteSpace: "nowrap" }}>
+                  schedule
+                </Link>
+              </li>
+            )}
             {!session && (
-              <li>
+              <li
+                onClick={() => setOpenLinks(false)}
+                style={
+                  pathname === "/signup"
+                    ? { backgroundColor: "limegreen", color: "white" }
+                    : {}
+                }
+              >
                 <Link href="/signup" style={{ whiteSpace: "nowrap" }}>
                   {" "}
                   register
@@ -96,6 +173,7 @@ const NavBar = () => {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
             onClick={handleClick}
+            sx={{ py: 0 }}
           >
             {session ? (
               <Avatar
@@ -121,12 +199,52 @@ const NavBar = () => {
             }}
             elevation={0}
           >
-            <MenuItem onClick={handleClose}>
-              <Typography variant="body2" component="div">
-                {session?.user.name}
-              </Typography>
+            {session && (
+              <MenuItem onClick={handleClose}>
+                <Typography variant="body2" component="div">
+                  {session?.user.name}
+                </Typography>
+              </MenuItem>
+            )}
+            {session && <Divider />}
+
+            <MenuItem
+              onClick={() => {
+                router.push("/pf");
+                handleClose();
+              }}
+            >
+              {session && (
+                <Typography variant="body2" component="div">
+                  Profile
+                </Typography>
+              )}
             </MenuItem>
-            <Divider />
+            {session && (
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                }}
+              >
+                {session?.user?.Role === "student" ? (
+                  <Typography
+                    variant="body2"
+                    component="div"
+                    onClick={() => handleChaangeRole("tutor")}
+                  >
+                    become tutor
+                  </Typography>
+                ) : (
+                  <Typography
+                    variant="body2"
+                    component="div"
+                    onClick={() => handleChaangeRole("student")}
+                  >
+                    become student
+                  </Typography>
+                )}
+              </MenuItem>
+            )}
             <MenuItem
               onClick={
                 session
@@ -137,26 +255,42 @@ const NavBar = () => {
               {session ? (
                 <Typography
                   variant="body2"
-                  sx={{ color: "tomato" }}
+                  sx={{
+                    color: "tomato",
+                    width: "150px",
+                    border: "2px solid tomato",
+                    borderRadius: "16px",
+                    display: "flex",
+                    flexFlow: "row nowrap",
+                    columnGap: "8px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
                   component="div"
                 >
-                  LogOut
+                  <span>LogOut</span>
+                  <LogoutIcon sx={{ fontSize: "16px" }} />
                 </Typography>
               ) : (
-                <Typography variant="body2" component="div">
-                  LogIn
+                <Typography
+                  variant="body2"
+                  component="div"
+                  sx={{
+                    color: "limegreen",
+                    width: "150px",
+                    border: "2px solid limegreen",
+                    borderRadius: "16px",
+                    display: "flex",
+                    flexFlow: "row nowrap",
+                    columnGap: "8px",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <span> LogIn</span>
+                  <LoginIcon sx={{ fontSize: "16px" }} />
                 </Typography>
               )}
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                router.push("/pf");
-                handleClose();
-              }}
-            >
-              <Typography variant="body2" component="div">
-                Profile
-              </Typography>
             </MenuItem>
           </Menu>
         </div>

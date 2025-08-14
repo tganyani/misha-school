@@ -22,10 +22,48 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { stone400 } from "@/lib/constants";
+import { useSession } from "next-auth/react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { CircularProgress } from "@mui/material";
+import axios from "axios";
+
+type Inputs = {
+  email: string;
+  description: string;
+};
 
 const Footer = () => {
+  const { data: session } = useSession();
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<Inputs>({
+    defaultValues: {
+      email: session?.user?.email as string,
+      description: "",
+    },
+  });
+  const values = watch();
+  const allFilled = Object.values(values).every(
+    (val) => val && val.trim() !== ""
+  );
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    setLoading(true);
+    await axios
+      .post("/api/contact-us", data)
+      .then(({ data }) => {
+        console.log(data);
+        setOpen(false);
+      })
+      .catch((err) => console.log(err));
+    setLoading(false);
+  };
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -37,7 +75,7 @@ const Footer = () => {
     <div className={styles.container}>
       <div className={styles.top}>
         <div className={styles.about}>
-          <Typography sx={{ color: "#eeeeee" }} variant="h6" component="div" >
+          <Typography sx={{ color: "#eeeeee" }} variant="h6" component="div">
             contact us
           </Typography>
           <List>
@@ -65,7 +103,11 @@ const Footer = () => {
             <ListItem
               disablePadding
               onClick={handleClickOpen}
-              sx={{ "&:hover": { backgroundColor: "limegreen" } }}
+              sx={{
+                border: `2px solid ${stone400}`,
+                borderRadius: "30px",
+                "&:hover": { backgroundColor: "limegreen" },
+              }}
             >
               <ListItemButton>
                 <ListItemIcon>
@@ -88,7 +130,12 @@ const Footer = () => {
           </List>
         </div>
         <div className={styles.statistics}>
-          <Typography gutterBottom variant="h6" component="div" sx={{color:"#eeeeee"}}>
+          <Typography
+            gutterBottom
+            variant="h6"
+            component="div"
+            sx={{ color: "#eeeeee" }}
+          >
             statistics
           </Typography>
           <List>
@@ -98,7 +145,7 @@ const Footer = () => {
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <PeopleIcon sx={{color:"#9e9e9e",fontSize:"18px"}}/>
+                  <PeopleIcon sx={{ color: "#9e9e9e", fontSize: "18px" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary={
@@ -119,7 +166,7 @@ const Footer = () => {
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <MenuBookIcon sx={{color:"#9e9e9e",fontSize:"18px"}} />
+                  <MenuBookIcon sx={{ color: "#9e9e9e", fontSize: "18px" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary={
@@ -137,7 +184,12 @@ const Footer = () => {
           </List>
         </div>
         <div className={styles.more}>
-          <Typography gutterBottom variant="h6" component="div"  sx={{color:"#eeeeee"}}>
+          <Typography
+            gutterBottom
+            variant="h6"
+            component="div"
+            sx={{ color: "#eeeeee" }}
+          >
             more
           </Typography>
           <List>
@@ -147,7 +199,7 @@ const Footer = () => {
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <GavelIcon sx={{color:"#9e9e9e",fontSize:"18px"}} />
+                  <GavelIcon sx={{ color: "#9e9e9e", fontSize: "18px" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary={
@@ -168,7 +220,7 @@ const Footer = () => {
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <PrivacyTipIcon  sx={{color:"#9e9e9e",fontSize:"18px"}}/>
+                  <PrivacyTipIcon sx={{ color: "#9e9e9e", fontSize: "18px" }} />
                 </ListItemIcon>
                 <ListItemText
                   primary={
@@ -189,7 +241,9 @@ const Footer = () => {
             >
               <ListItemButton>
                 <ListItemIcon>
-                  <AccessibilityIcon sx={{color:"#9e9e9e",fontSize:"18px"}}/>
+                  <AccessibilityIcon
+                    sx={{ color: "#9e9e9e", fontSize: "18px" }}
+                  />
                 </ListItemIcon>
                 <ListItemText
                   primary={
@@ -208,7 +262,9 @@ const Footer = () => {
         </div>
       </div>
       <Divider />
-      <div className={styles.bottom}>&copy; 2024 All Rights Reserved</div>
+      <div className={styles.bottom}>
+        &copy; {new Date().getFullYear()} All Rights Reserved
+      </div>
       {/* this is the modal for the email */}
       <Dialog
         open={open}
@@ -243,16 +299,26 @@ const Footer = () => {
             required
             margin="dense"
             id="name"
-            name="email"
             label="your email Address"
             type="email"
             fullWidth
             variant="outlined"
             size="small"
+            defaultValue={session?.user?.email}
             sx={{
               marginBottom: "20px",
             }}
+            {...register("email", { required: true })}
           />
+          {errors.email && (
+            <Typography
+              component="div"
+              variant="body2"
+              sx={{ color: "tomato" }}
+            >
+              this field is required
+            </Typography>
+          )}
           <TextField
             id="message"
             multiline
@@ -261,15 +327,39 @@ const Footer = () => {
             focused
             fullWidth
             minRows={3}
-            required
+            {...register("description", { required: true })}
           />
+          {errors.email && (
+            <Typography
+              component="div"
+              variant="body2"
+              sx={{ color: "tomato" }}
+            >
+              this field is required
+            </Typography>
+          )}
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ padding: "22px" }}>
           <Button onClick={handleClose} sx={{ textTransform: "lowercase" }}>
             cancel
           </Button>
-          <Button type="submit" sx={{ textTransform: "lowercase" }}>
-            send
+          <Button
+            size="small"
+            variant="contained"
+            type="submit"
+            sx={{
+              textTransform: "lowercase",
+              backgroundColor: "limegreen",
+              minWidth: "100px",
+            }}
+            disabled={!allFilled || loading}
+            onClick={handleSubmit(onSubmit)}
+          >
+            {loading ? (
+              <CircularProgress size={16} sx={{ color: "white" }} />
+            ) : (
+              "send"
+            )}
           </Button>
         </DialogActions>
       </Dialog>

@@ -2,14 +2,18 @@
 import { useSession } from "next-auth/react";
 import { Stack, Typography } from "@mui/material";
 import useSWR from "swr";
-import {  userProfileType } from "@/lib/user-types";
+import { userProfileType } from "@/lib/user-types";
 import LoadingData from "@/components/loading-d";
+import ImageIcon from "@mui/icons-material/Image";
+import { CldImage } from "next-cloudinary";
 
 import { fetcher } from "@/helper";
 import EditNameModal from "@/components/editNameModal";
 import EditAboutModal from "@/components/editAboutModal";
 import EditCourseModal from "@/components/editCourseModal";
 import EditLanguageModal from "@/components/editLanguageModal";
+import { stone200, stone400 } from "@/lib/constants";
+import EditProfileImageModal from "@/components/editProfileImageModal";
 
 export default function Profile() {
   const { data: session } = useSession();
@@ -21,14 +25,21 @@ export default function Profile() {
   if (error) return <div>failed to load data</div>;
   if (!data) return null;
   return (
-    <Stack sx={{ display: "flex", flexDirection: "column", rowGap: "20px",px:1 }}>
-      <div>
-        <div>
+    <Stack
+      sx={{ display: "flex", flexDirection: "column", rowGap: "20px", px: 1 }}
+    >
+      <Stack
+        sx={{
+          display: "flex",
+          flexFlow: "row nowrap",
+          justifyContent: "space-between",
+        }}
+      >
+        <Stack>
           <Typography variant="body1" component="div">
             {data?.firstName} ,{data?.lastName}
           </Typography>
           <Typography color="GrayText" variant="body2" component="div">
-            {" "}
             {data?.country},{data?.hLeducation},{data?.Role}
           </Typography>
           <EditNameModal
@@ -37,8 +48,33 @@ export default function Profile() {
             hLeducation={data?.hLeducation}
             country={data?.country}
           />
-        </div>
-      </div>
+        </Stack>
+        <Stack>
+          <Stack
+            sx={{
+              border: `2px solid ${stone200}`,
+              borderRadius: "30px",
+              width: "60px",
+              height: 60,
+              position: "relative",
+            }}
+          >
+            {data.image ? (
+              <CldImage
+                src={data.imagePublicId}
+                alt="profile Image"
+                fill
+                style={{ borderRadius: "30px" }}
+              />
+            ) : (
+              <ImageIcon sx={{ color: stone400, fontSize: "60px" }} />
+            )}
+          </Stack>
+          <Stack sx={{ position: "absolute", right: "12px" }}>
+            <EditProfileImageModal url={data.image} />
+          </Stack>
+        </Stack>
+      </Stack>
       {/* About */}
       <div>
         <Stack direction="row" justifyContent="space-between">

@@ -6,13 +6,12 @@ import {
   Edit,
   TextInput,
   required,
-  SelectInput,
   DateTimeInput,
   DateInput,
   useRecordContext,
   useRefresh,
   UrlField,
-  SearchInput,AutocompleteInput
+  AutocompleteInput
 } from "react-admin";
 import CircularProgress from "@mui/material/CircularProgress";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";

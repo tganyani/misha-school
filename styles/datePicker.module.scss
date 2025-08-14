@@ -60,7 +60,7 @@ $rowGap2: 10px;
 @media screen and (max-width: 500px) {
   /* Styles for screens 600px wide or smaller */
   .custom-datepicker{
-    width: fit-content;
+    width: 100%;
     flex: 1;
   }
 }

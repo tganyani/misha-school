@@ -89,6 +89,14 @@ export async function POST(request: Request) {
           booked: true,
         },
       });
+      await prisma.paymentPlan.update({
+        where: {
+          userId: parseInt(body.studentId)
+        },
+        data: {
+          nLessonsLeft: { decrement: 1 },
+        }
+      })
       await sendLessonBookEmail(
         body.tutorEmail,
         body.subject,

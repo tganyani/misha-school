@@ -1,8 +1,11 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import axios from "axios";
-
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 import { Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
@@ -19,6 +22,7 @@ interface IFormInput {
   email: string;
   password: string;
   confirmPassword: string;
+  Role: string;
 }
 
 const SingUp = () => {
@@ -30,6 +34,7 @@ const SingUp = () => {
     formState: { errors },
     handleSubmit,
     watch,
+    control,
   } = useForm<IFormInput>({
     defaultValues: {
       password: "",
@@ -43,10 +48,16 @@ const SingUp = () => {
           "Content-Type": "application/json",
         },
       })
-      .then((res) => router.push("/api/auth/signin"))
-      .catch((err) => setResponseMsg(err.response?.data?.error));
-    
-    setTimeout(()=>setLoadingSignUp(false),1000)
+      .then(({ data }) => {
+        if (data.created) {
+          router.push(`/vf?email=${encodeURIComponent(data?.email)}`);
+        } else {
+          setResponseMsg(data.err);
+        }
+      })
+      .catch((err) => console.log(err));
+
+    setLoadingSignUp(false);
   };
   return (
     <div className={styles.container}>
@@ -70,7 +81,7 @@ const SingUp = () => {
           size="small"
           {...register("firstName", { required: true })}
           aria-invalid={errors.firstName ? "true" : "false"}
-          sx={{ width: "200px" }}
+          sx={{}}
         />
         {errors.firstName?.type === "required" && (
           <Typography
@@ -87,7 +98,7 @@ const SingUp = () => {
           defaultValue=""
           size="small"
           {...register("lastName", { required: true })}
-          sx={{ width: "200px" }}
+          sx={{}}
         />
         {errors.lastName?.type === "required" && (
           <Typography
@@ -99,13 +110,27 @@ const SingUp = () => {
             last name is required
           </Typography>
         )}
+        <FormControl fullWidth size="small">
+          <InputLabel>account type</InputLabel>
+          <Controller
+            name="Role"
+            control={control}
+            defaultValue="student"
+            render={({ field }) => (
+              <Select {...field} label="account type">
+                <MenuItem value="student">student</MenuItem>
+                <MenuItem value="tutor">tutor</MenuItem>
+              </Select>
+            )}
+          />
+        </FormControl>
         <TextField
           label="email"
           defaultValue=""
           size="small"
           type="email"
           {...register("email", { required: true })}
-          sx={{ width: "200px" }}
+          sx={{}}
         />
         {errors.email?.type === "required" && (
           <Typography
@@ -123,7 +148,7 @@ const SingUp = () => {
           size="small"
           type="password"
           {...register("password", { required: true })}
-          sx={{ width: "200px" }}
+          sx={{}}
         />
         {errors.password?.type === "required" && (
           <Typography
@@ -136,33 +161,30 @@ const SingUp = () => {
           </Typography>
         )}
 
-        <div style={{ display: "flex", flexFlow: "row nowrap" }}>
-          <TextField
-            label="confirm password"
-            defaultValue=""
-            size="small"
-            type="password"
-            {...register("confirmPassword", { required: true })}
-            sx={{ width: "200px" }}
-          />
-          {watch("password") !== "" ? (
-            watch("password") === watch("confirmPassword") ? (
-              <CheckCircleOutlineIcon color="success" />
-            ) : (
-              <ErrorOutlineIcon color="error" />
-            )
+        <TextField
+          label="confirm password"
+          defaultValue=""
+          size="small"
+          type="password"
+          {...register("confirmPassword", { required: true })}
+          sx={{}}
+        />
+        {watch("password") !== "" ? (
+          watch("password") === watch("confirmPassword") ? (
+            <CheckCircleOutlineIcon color="success" />
           ) : (
-            " "
-          )}
-        </div>
+            <ErrorOutlineIcon color="error" />
+          )
+        ) : (
+          " "
+        )}
         <Button
           disabled={loodingSignUp}
           onClick={handleSubmit(onSubmit)}
           sx={{
             backgroundColor: "limegreen",
             color: "white",
-            width: "200px",
-            textTransform:"lowercase",
+            textTransform: "lowercase",
             "&:hover": {
               backgroundColor: "lawngreen",
             },

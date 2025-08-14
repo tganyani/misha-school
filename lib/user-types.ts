@@ -8,9 +8,14 @@ export type userProfileType = {
   about: string;
   hLeducation: string;
   country: string;
+  imagePublicId: string;
   subjects: CourseType[];
   languages: LanguageType[];
   availability: AvailabilityType[];
+  tutorComments: CommentsType[];
+  freeTrials: {
+    studEmail: string;
+  }[];
 };
 
 export type CourseType = {
@@ -30,4 +35,23 @@ export type AvailabilityType = {
   id: string;
   time: string;
   booked: boolean;
+};
+
+export type CommentsType = {
+  id: string | null;
+  text: string | null;
+  updatedAt: string | Date;
+  student: {
+    imagePublicId: string | null;
+    firstName: string;
+    lastName: string;
+    image: string | null;
+  };
+  tutor: {
+    imagePublicId: string | null;
+    firstName: string;
+    lastName: string;
+    image: string | null;
+    id: number | null;
+  };
 };

@@ -17,6 +17,7 @@ import { Stack } from "@mui/material";
 import dayjs from "dayjs";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import styles from "@/styles/datePicker.module.scss";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function EditAvailabilityModal({
   currentTime,
@@ -69,7 +70,26 @@ export default function EditAvailabilityModal({
         maxWidth="sm"
         fullScreen={matches}
       >
-        <DialogTitle>Update</DialogTitle>
+        <Stack
+          sx={{
+            display: "flex",
+            flexFlow: "row nowrap",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <DialogTitle fontSize="small">Update</DialogTitle>
+          <CloseIcon
+            onClick={()=>setOpen(false)}
+            sx={{
+              color: "GrayText",
+              fontSize: "18px",
+              "&:hover": {
+                fontSize: "20px",
+              },
+            }}
+          />
+        </Stack>
         <DialogContent
           sx={{
             paddingBottom: 0,
@@ -82,11 +102,12 @@ export default function EditAvailabilityModal({
             <div
               style={{
                 display: "flex",
-                flexFlow: "row nowrap",
+                flexFlow: matches ? "column nowrap" : "row nowrap",
                 justifyContent: "center",
                 columnGap: "10px",
                 marginBottom: "30px",
                 marginTop: "20px",
+                rowGap: "8px",
               }}
             >
               <DatePicker
@@ -104,50 +125,59 @@ export default function EditAvailabilityModal({
                   <CalendarMonthIcon sx={{ color: "grey", fontSize: "16px" }} />
                 }
               />
-              {date && (
+              <Stack
+                sx={{
+                  display: "flex",
+                  flexFlow: "row nowrap",
+                  justifyContent: "space-between",
+                  flex: 1,
+                }}
+              >
+                {date && (
+                  <Button
+                    size="small"
+                    sx={{
+                      color: "white",
+                      backgroundColor: "limegreen",
+                      textTransform: "lowercase",
+                      fontSize: "14px",
+                      "&:hover": {
+                        backgroundColor: "limegreen",
+                        opacity: "0.8",
+                      },
+                      py: 0,
+                    }}
+                    onClick={handleUpdate}
+                  >
+                    {loading ? (
+                      <CircularProgress size={16} sx={{ color: "white" }} />
+                    ) : (
+                      "update"
+                    )}
+                  </Button>
+                )}
                 <Button
                   size="small"
                   sx={{
                     color: "white",
-                    backgroundColor: "limegreen",
+                    backgroundColor: "tomato",
                     textTransform: "lowercase",
                     fontSize: "14px",
                     "&:hover": {
-                      backgroundColor: "limegreen",
+                      backgroundColor: "red",
                       opacity: "0.8",
                     },
                     py: 0,
                   }}
-                  onClick={handleUpdate}
+                  onClick={handleDelete}
                 >
-                  {loading ? (
+                  {loadingD ? (
                     <CircularProgress size={16} sx={{ color: "white" }} />
                   ) : (
-                    "update"
+                    "delete"
                   )}
                 </Button>
-              )}
-              <Button
-                size="small"
-                sx={{
-                  color: "white",
-                  backgroundColor: "tomato",
-                  textTransform: "lowercase",
-                  fontSize: "14px",
-                  "&:hover": {
-                    backgroundColor: "red",
-                    opacity: "0.8",
-                  },
-                  py: 0,
-                }}
-                onClick={handleDelete}
-              >
-                {loadingD ? (
-                  <CircularProgress size={16} sx={{ color: "white" }} />
-                ) : (
-                  "delete"
-                )}
-              </Button>
+              </Stack>
             </div>
           </Stack>
         </DialogContent>

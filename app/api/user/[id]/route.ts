@@ -8,6 +8,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const { id } = params;
+  const { searchParams } = new URL(req.url);
+  const time = searchParams.get("time") as string
+  const fromDate = time ? new Date(time) : new Date();
   try {
     return Response.json(
       await prisma.user.findUnique({
@@ -31,18 +34,44 @@ export async function GET(
             },
           },
           availability: {
+            where: {
+              time: {
+                gte: fromDate
+              }
+            },
             select: {
               id: true,
               booked: true,
               time: true,
             },
+            orderBy: {
+              time: "asc"
+            }
           },
+          tutorComments: {
+            select: {
+              id: true,
+              text: true,
+              updatedAt: true,
+              student: {
+                select: {
+                  imagePublicId: true,
+                  firstName: true,
+                  lastName: true
+                }
+              }
+            }
+          },
+          freeTrials: {
+            select: {
+              studEmail: true
+            }
+          }
         },
       })
     );
   } catch (err) {
     console.log(err);
-    return Response.json({ msg: "error while fetching data" });
   }
 }
 

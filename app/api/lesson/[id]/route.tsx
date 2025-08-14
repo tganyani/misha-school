@@ -1,7 +1,6 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
-
 export async function GET(
   req: Request,
   { params }: { params: { id: string } }
@@ -17,11 +16,13 @@ export async function GET(
           student: {
             select: {
               firstName: true,
+              email: true,
             },
           },
           tutor: {
             select: {
               firstName: true,
+              email: true,
             },
           },
           course: {
@@ -56,7 +57,7 @@ export async function PATCH(
         id: parseInt(id),
       },
       data: {
-        tutorId:parseInt(data?.tutor?.firstName)
+        tutorId: parseInt(data?.tutor?.firstName),
       },
     });
     return NextResponse.json(updatedLesson, { status: 200 });
