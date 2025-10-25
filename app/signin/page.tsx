@@ -34,7 +34,7 @@ const SingIn = () => {
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     setLoadingSignUp(true);
 
-    signIn("credentials", { ...data ,callbackUrl:"/"});
+    signIn("credentials", { ...data, callbackUrl: "/" });
 
     setTimeout(() => setLoadingSignUp(false), 1000);
   };
@@ -98,7 +98,7 @@ const SingIn = () => {
             justifyContent: "flex-end",
           }}
         >
-         <ForgotPasswordModal/>
+          <ForgotPasswordModal />
         </Stack>
 
         <Button
@@ -126,6 +126,7 @@ const SingIn = () => {
           </Button>
         </Typography>
       </div>
+      <Button onClick={() => signIn("google")}>Login with google</Button>
     </div>
   );
 };

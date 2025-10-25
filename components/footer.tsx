@@ -304,7 +304,6 @@ const Footer = () => {
             fullWidth
             variant="outlined"
             size="small"
-            defaultValue={session?.user?.email}
             sx={{
               marginBottom: "20px",
             }}
