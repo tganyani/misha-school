@@ -15,6 +15,7 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 // ***************************************
 import styles from "@/styles/signup.module.scss";
 import { useState } from "react";
+import GoogleButton from "@/components/googleBtn";
 
 interface IFormInput {
   firstName: string;
@@ -197,11 +198,12 @@ const SingUp = () => {
           <Button
             variant="text"
             sx={{ textTransform: "lowercase" }}
-            onClick={() => router.push("/api/auth/signin")}
+            onClick={() => router.push("/signin")}
           >
             login
           </Button>
         </Typography>
+        <GoogleButton/>
       </div>
     </div>
   );

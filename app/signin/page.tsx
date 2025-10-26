@@ -10,6 +10,8 @@ import { signIn } from "next-auth/react";
 import styles from "@/styles/signup.module.scss";
 import { useState } from "react";
 import ForgotPasswordModal from "@/components/forgotPasswordModal";
+import GoogleButton from "@/components/googleBtn";
+
 
 interface IFormInput {
   email: string;
@@ -120,13 +122,14 @@ const SingIn = () => {
           <Button
             variant="text"
             sx={{ textTransform: "lowercase" }}
-            onClick={() => router.push("/api/auth/signin")}
+            onClick={() => router.push("/signup")}
           >
             register
           </Button>
         </Typography>
+          <GoogleButton/>
       </div>
-      <Button onClick={() => signIn("google")}>Login with google</Button>
+    
     </div>
   );
 };
